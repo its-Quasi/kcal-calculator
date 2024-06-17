@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
+import { getBoundValue } from "../helpers/handlerRangeValues";
 
 export const useCalculatorForm = (initialForm = {}) => {
+
+  const IMPERIAL_SYSTEM = 'imperial'
   const [formState, setFormState] = useState(initialForm);
-  const [result, setResult] = useState(0)
+  const [system, setSystem] = useState(IMPERIAL_SYSTEM)
+  const [result, setResult] = useState('')
+
 
   useEffect(() => {
     const updatedResult = getResult()
@@ -11,10 +16,20 @@ export const useCalculatorForm = (initialForm = {}) => {
 
 
   const onInputChange = ({ target }) => {
-    const { name, value } = target;
+    let { name, value } = target;
     setFormState({
       ...formState,
       [name]: value
+    })
+  }
+
+
+  const onBlurChange = ({ target }) => {
+    let { name, value } = target;
+    const adjustedValue = getBoundValue(system, name, value)
+    setFormState({
+      ...formState,
+      [name]: adjustedValue
     })
   }
 
@@ -26,18 +41,34 @@ export const useCalculatorForm = (initialForm = {}) => {
     }
   }
 
+  const onSystemChange = ({ target }) => {
+    setSystem(target.value)
+    onResetForm()
+  }
+
   const getResult = () => {
     const { age, weight, height } = parseFormValues(formState)
-    return age + weight + height
+    if(!age || !weight || !height) return 'Some data is missing'
+    const factor = getFactor(system, weight)
+    const calorie = (10 * weight + 6.25 * height - 10 * age + 5) * factor
+    return `${calorie} Kcal`
   }
 
-  //TODO
-  const getFactor = (params) => {
-
+  const getFactor = (system, weight) => {
+    if(system === IMPERIAL_SYSTEM) {
+      if(weight < 165) return 1.6
+      else if(weight >= 165 && weight <= 200) return 1.4
+      else if(weight >= 201 && weight <= 220) return 1.2
+      else return 1
+    } else {
+      if(weight < 75) return 1.6
+      else if(weight >= 75 && weight <= 90) return 1.4
+      else if(weight >= 91 && weight <= 100) return 1.2
+      else return 1
+    }
   }
-
+  
   const onResetForm = () => setFormState(initialForm)
 
-
-  return { formState, result, onInputChange, onResetForm, getResult }
+  return { formState, result, onInputChange, onBlurChange, onResetForm, getResult, onSystemChange }
 }
