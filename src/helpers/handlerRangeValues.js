@@ -29,7 +29,6 @@ const IMPERIAL_SYSTEM_BOUNDS = {
 }
 
 export const getBoundValue = (system, field, value) => {
-
   if (system === 'decimal') {
     const { MIN, MAX } = DECIMAL_SYSTEM_BOUNDS[field]
     if (value >= MIN && value <= MAX) return value
