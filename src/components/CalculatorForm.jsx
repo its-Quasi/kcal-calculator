@@ -50,8 +50,8 @@ export const CalculatorForm = () => {
         </label>
 
         <select name="Select" onChange={onSystemChange}>
-          <option value="imperial">Imperial</option>
           <option value="decimal">Decimal</option>
+          <option value="imperial">Imperial</option>
         </select>
       </div>
 

@@ -3,9 +3,9 @@ import { getBoundValue } from "../helpers/handlerRangeValues";
 
 export const useCalculatorForm = (initialForm = {}) => {
 
-  const IMPERIAL_SYSTEM = 'imperial'
+  const DECIMAL_SYSTEM = 'decimal'
   const [formState, setFormState] = useState(initialForm);
-  const [system, setSystem] = useState(IMPERIAL_SYSTEM)
+  const [system, setSystem] = useState(DECIMAL_SYSTEM)
   const [result, setResult] = useState('')
 
 
@@ -55,7 +55,7 @@ export const useCalculatorForm = (initialForm = {}) => {
   }
 
   const getFactor = (system, weight) => {
-    if(system === IMPERIAL_SYSTEM) {
+    if(system !== DECIMAL_SYSTEM) {
       if(weight < 165) return 1.6
       else if(weight >= 165 && weight <= 200) return 1.4
       else if(weight >= 201 && weight <= 220) return 1.2
