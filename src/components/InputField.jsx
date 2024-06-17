@@ -9,8 +9,11 @@ export const InputField = ({ system, name, onInputChange, value }) => {
   }, [value])
 
   const onChangeInput = ({ target }) => {
-    let { value } = target
+    let { name, value } = target
     value = Number(value) || 0
+    if (value < 0) {
+      alert(`You can only enter positive numbers. The ${name} field will be filled with min acceptable value`)
+    }
     setInputValue(value)
   }
 
