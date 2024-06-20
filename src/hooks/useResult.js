@@ -13,14 +13,14 @@ export const useResult = (formState) => {
   }, [formState])
 
 
-  
+
   const calculateResult = () => {
+    if (!weight || !height || !age) return 0
     const factor = getFactor()
-    //(10 * weight + 6.25 * height - 10 * age + 5) * factor
     return (10 * weight + 6.25 * height - 10 * age + 5) * factor
   }
 
-  
+
 
   const getFactor = () => {
     if (system !== DECIMAL_SYSTEM) {
