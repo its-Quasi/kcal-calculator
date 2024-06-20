@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
+import { decimalToImperial, imperialToDecimal } from "../helpers/handlerConversionValue"
 const DECIMAL_SYSTEM = 'decimal'
 
 export const useResult = (formState) => {
 
-  const { age, weight, height, system } = formState
-  const [result, setResult] = useState('Some data is missing')
+  let { age, weight, height, system } = formState
+  const [result, setResult] = useState(0)
 
   useEffect(() => {
     setResult(
@@ -16,6 +17,12 @@ export const useResult = (formState) => {
 
   const calculateResult = () => {
     if (!weight || !height || !age) return 0
+    if (system === 'decimal') {
+      const imperialValues = decimalToImperial(formState)
+      height = imperialValues.height
+      weight = imperialValues.weight
+    }
+    //console.log('at calc moment' , weight)
     const factor = getFactor()
     return (10 * weight + 6.25 * height - 10 * age + 5) * factor
   }
@@ -23,17 +30,10 @@ export const useResult = (formState) => {
 
 
   const getFactor = () => {
-    if (system !== DECIMAL_SYSTEM) {
-      if (weight < 165) return 1.6
-      else if (weight >= 165 && weight <= 200) return 1.4
-      else if (weight >= 201 && weight <= 220) return 1.2
-      else return 1
-    } else {
-      if (weight < 75) return 1.6
-      else if (weight >= 75 && weight <= 90) return 1.4
-      else if (weight >= 91 && weight <= 100) return 1.2
-      else return 1
-    }
+    if (weight < 165) return 1.6
+    else if (weight >= 165 && weight <= 200) return 1.4
+    else if (weight >= 201 && weight <= 220) return 1.2
+    else return 1
   }
 
   return {

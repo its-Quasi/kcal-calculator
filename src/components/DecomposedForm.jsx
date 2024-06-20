@@ -1,15 +1,16 @@
 import { useState } from "react"
 import { InputField } from "./InputField"
 import { useResult } from "../hooks/useResult"
+import { decimalToImperial, imperialToDecimal } from "../helpers/handlerConversionValue"
 
 export const DecomposedForm = () => {
 
-  const [system, setSystem] = useState('decimal')
+  //const [system, setSystem] = useState('decimal')
   const [formState, setFormState] = useState({
     age: 0,
     weight: 0,
     height: 0,
-    system
+    system: 'decimal'
   })
 
   // use a custom hook to calc result
@@ -23,16 +24,17 @@ export const DecomposedForm = () => {
   }
 
   const onSystemChange = ({ target }) => {
-    setSystem(target.value)
-    onResetForm()
-  }
-
-  const onResetForm = () => {
+    const { value } = target
+    let convertedValues = {}
+    if (formState.system === 'decimal') {
+      convertedValues = decimalToImperial(formState)
+    } else {
+      convertedValues = imperialToDecimal(formState)
+    }
     setFormState({
-      age: 0,
-      weight: 0,
-      height: 0,
-      system
+      ...formState,
+      system: value,
+      ...convertedValues
     })
   }
 
@@ -40,9 +42,9 @@ export const DecomposedForm = () => {
     <>
       <h2 className="mt-2">Calorie Calculator</h2>
 
-      <InputField name="age" value={formState.age} system={system} onInputChange={onInputChange} />
-      <InputField name="weight" value={formState.weight} system={system} onInputChange={onInputChange} />
-      <InputField name="height" value={formState.height} system={system} onInputChange={onInputChange} />
+      <InputField name="age" value={formState.age} system={formState.system} onInputChange={onInputChange} />
+      <InputField name="weight" value={formState.weight} system={formState.system} onInputChange={onInputChange} />
+      <InputField name="height" value={formState.height} system={formState.system} onInputChange={onInputChange} />
 
       <div className="d-flex justify-content-end mt-2">
         <label className="me-3">
