@@ -11,9 +11,6 @@ export const InputField = ({ system, name, onInputChange, value }) => {
   const onChangeInput = ({ target }) => {
     let { name, value } = target
     value = Number(value) || 0
-    if (value < 0) {
-      alert(`You can only enter positive numbers. The ${name} field will be filled with min acceptable value`)
-    }
     setInputValue(value)
   }
 
@@ -27,6 +24,12 @@ export const InputField = ({ system, name, onInputChange, value }) => {
     setInputValue(adjustedValue)
   }
 
+  const onKeyDown = (event) => {
+    if (["e", "E", "+", "-"].includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
   return (
     <input
       className="form-control mt-2"
@@ -35,7 +38,9 @@ export const InputField = ({ system, name, onInputChange, value }) => {
       name={name}
       value={inputValue || ''}
       onChange={onChangeInput}
+      onKeyDown={onKeyDown}
       onBlur={onBlurChange}
     />
+
   )
 }
